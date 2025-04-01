@@ -1,21 +1,24 @@
 [package]
-name = "live2d-parser"
-version = "0.0.0"
+name = "lpk"
+version = { workspace = true }
 authors = ["Aster <192607617@qq.com>"]
-description = "Live2D 文件格式解析器"
+description = "Decrypt the `.lkp` file from `Live2dViewerEx`"
 repository = "https://github.com/oovm/sub_projects"
 documentation = "https://docs.rs/sub_projects"
 readme = "readme.md"
-license = "MPL-2.0"
+license = "AGPL-3"
 edition = "2021"
 
 [dependencies]
-serde = { version = "1.0.219", features = ["derive"] }
-serde_json = "1.0.140"
+md5 = "0.7"
+zip = "2.5.0"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 tracing = "0.1.41"
 
 [dev-dependencies]
 tracing-subscriber = "0.3.19"
+tempfile = "3.8"
 
 [features]
 default = []
