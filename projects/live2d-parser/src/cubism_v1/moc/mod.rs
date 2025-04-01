@@ -19,8 +19,10 @@ pub struct Moc<'i> {
     canvas_height: i32,
 }
 
-enum ObjectType {
-    Unknown,
+#[derive(Debug)]
+pub enum ObjectData {
+    ObjectArray { objects: Vec<ObjectData> },
+    Unknown { type_id: u64 },
 }
 
 impl<'i> Moc<'i> {
@@ -73,6 +75,39 @@ unsafe fn read_str(bytes: &[u8]) -> Result<(&str, &[u8]), serde_json::Error> {
 unsafe fn read_var(bytes: &[u8]) -> Result<(usize, &[u8]), serde_json::Error> {
     match usize::decode_var(bytes) {
         Some((s, delta)) => Ok((s, bytes.get_unchecked(delta..))),
+        None => Err(serde_json::Error::custom("Invalid string length"))?,
+    }
+}
+
+pub struct MocReader<'i> {
+    moc: &'i [u8],
+    ptr: usize,
+}
+
+
+impl<'i> MocReader<'i> {
+    pub fn new(moc: &'i [u8]) -> Self {
+        Self { moc, ptr: 0 }
+    }
+}
+
+unsafe fn read_object(bytes: &[u8]) -> Result<(ObjectData, &[u8]), serde_json::Error> {
+    let (type_id, rest) = match u64::decode_var(bytes) {
+        Some((s, delta)) => (s, bytes.get_unchecked(delta..)),
+        None => Err(serde_json::Error::custom("Invalid string length"))?,
+    };
+    match type_id {
+        15 => {
+            let (objects, rest) = read_object_array(rest)?;
+            Ok((ObjectData::ObjectArray { objects }, rest))
+        }
+        _ => Err(serde_json::Error::custom(format!("Unknown type {}", type_id))),
+    }
+}
+
+unsafe fn read_object_array(bytes: &[u8]) -> Result<(Vec<ObjectData>, &[u8]), serde_json::Error> {
+    match u64::decode_var(bytes) {
+        Some((s, delta)) => Ok((vec![ObjectData::Unknown { type_id: s as u64 }], bytes.get_unchecked(delta..))),
         None => Err(serde_json::Error::custom("Invalid string length"))?,
     }
 }
