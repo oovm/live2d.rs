@@ -1,10 +1,9 @@
-use serde::{Deserialize, Serialize};
 use crate::{
     cubism_v1::moc::{MocObject, MocReader, ObjectData},
     L2Error,
 };
+use serde::{Deserialize, Serialize};
 use tracing::{debug, info, trace, warn};
-
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Texture {
@@ -31,7 +30,7 @@ impl MocObject for Vec<Texture> {
 
 impl MocObject for Texture {
     unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
-    where 
+    where
         Self: Sized,
     {
         let id = reader.read()?;
@@ -45,6 +44,13 @@ impl MocObject for Texture {
         println!("Texture _2: {:?}", _array1);
         let _array2: Vec<f32> = reader.read()?;
         println!("Texture _3: {:?}", _array2);
+
+        let draw_id: String = reader.read()?;
+        println!("Texture draw_id: {:?}", draw_id);
+        if draw_id.is_empty() {
+        }
+        else {
+        }
         Ok(Self {
             id,
             target_id,

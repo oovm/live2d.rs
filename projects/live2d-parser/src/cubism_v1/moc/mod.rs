@@ -5,6 +5,7 @@ mod params;
 mod parts;
 mod pivots;
 mod textures;
+mod string_id;
 
 use self::parts::Part;
 use crate::{
