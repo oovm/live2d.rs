@@ -1,13 +1,13 @@
 [package]
 name = "live2d-parser"
-version = "0.0.2"
+version = "0.0.3"
 authors = ["Aster <192607617@qq.com>"]
-description = "The parser for Live2D's `*.model.json`, `*.moc`"
+description = "The pure rust parser for Live2D's `*.model.json` and `*.moc`"
 repository = "https://github.com/oovm/live2d-unpacker"
 documentation = "https://docs.rs/live2d-parser"
 readme = "readme.md"
 license = "MPL-2.0"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 serde = { version = "1.0.219", features = ["derive"] }

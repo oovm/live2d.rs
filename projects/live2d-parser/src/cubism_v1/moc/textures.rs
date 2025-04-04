@@ -38,12 +38,14 @@ impl MocObject for Texture {
         let target_id = reader.read()?;
         warn!("Texture count: {}={}", id, target_id);
         let values: ObjectData = reader.read()?;
+        println!("Texture Values: {:?}", values);
+        let _align: i32 = reader.read()?;
+        println!("Texture _1: {:?}", _align);
         Ok(Self {
             id,
             target_id,
             // count: target as u32,
-            // 似乎总是 f32[3], 暂未发现反例
-            values: values.as_f32_array(),
+            values: vec![],
         })
     }
 }

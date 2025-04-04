@@ -82,6 +82,20 @@ impl<const N: usize> MocObject for [u8; N] {
     }
 }
 
+impl MocObject for Vec<i32> {
+    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    where
+        Self: Sized,
+    {
+        let count = reader.read_var()?;
+        let mut values = Vec::with_capacity(count as usize);
+        for _ in 0..count {
+            values.push(reader.read()?);
+        }
+        Ok(values)
+    }
+}
+
 impl MocObject for i32 {
     unsafe fn read_object(r: &MocReader) -> Result<Self, L2Error>
     where
