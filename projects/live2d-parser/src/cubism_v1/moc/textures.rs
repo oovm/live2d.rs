@@ -9,8 +9,9 @@ use tracing::{debug, info, trace, warn};
 pub struct Texture {
     pub id: String,
     pub target_id: String,
-    // pub count: u32,
-    pub values: Vec<f32>,
+    pub average_draw_order: i32,
+    pub pivot_draw_order: Vec<i32>,
+    pub pivot_opacity: Vec<f32>,
     pub clip_id: Vec<String>,
 }
 
@@ -36,15 +37,11 @@ impl MocObject for Texture {
     {
         let id = reader.read()?;
         let target_id = reader.read()?;
-        warn!("Texture count: {}={}", id, target_id);
+
         let values: ObjectData = reader.read()?;
-        println!("Texture Values: {:?}", values);
-        let _align: i32 = reader.read()?;
-        println!("Texture _1: {:?}", _align);
-        let _array1: Vec<f32> = reader.read()?;
-        println!("Texture _2: {:?}", _array1);
-        let _array2: Vec<f32> = reader.read()?;
-        println!("Texture _3: {:?}", _array2);
+        let average_draw_order: i32 = reader.read()?;
+        let pivot_draw_order: Vec<i32> = reader.read()?;
+        let pivot_opacity: Vec<f32> = reader.read()?;
         let clip_id = if reader.version() >= 11 {
             let draw_id: String = reader.read()?;
             println!("Texture draw_id: {:?}", draw_id);
@@ -63,11 +60,15 @@ impl MocObject for Texture {
         else {
             vec![]
         };
+        let texture_id: i32 = reader.read()?;
+        println!("Texture id: {:?}", texture_id);
         Ok(Self {
             id,
             target_id,
             // count: target as u32,
-            values: vec![],
+            average_draw_order,
+            pivot_draw_order,
+            pivot_opacity,
             clip_id,
         })
     }
