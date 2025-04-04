@@ -1,6 +1,6 @@
-use tracing::warn;
 use super::*;
 use crate::cubism_v1::moc::{affines::Affine, pivots::Pivot};
+use tracing::warn;
 
 pub enum DeformerType {
     Dummy = 0,
@@ -61,15 +61,8 @@ impl MocObject for CurvedSurfaceDeformer {
         let row = reader.read()?;
         let column = reader.read()?;
         let pivots: ObjectData = reader.read()?;
-        println!("v: {}", reader.version() );
-        
-        let opacities = if reader.version() >= 10 {
-            let o: ObjectData = reader.read()?; 
-            warn!("opacities: {:?}", o);
-            vec![] } else { Vec::new() };
-        let o: Vec<f32> = reader.read()?;
-        println!("unknown: {o:?}");
-        
+        let unknown: ObjectData = reader.read()?;
+        let opacities = if reader.version() >= 10 { reader.read()? } else { Vec::new() };
         Ok(Self {
             id,
             target_id,
