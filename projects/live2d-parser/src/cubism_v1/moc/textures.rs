@@ -5,35 +5,22 @@ use crate::{
 };
 use tracing::{debug, info, trace, warn};
 
-#[derive(Debug, Serialize, Deserialize)]
-pub struct PivotManager {
-    pub items: Vec<Pivot>,
-}
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Pivot {
+pub struct Texture {
     pub id: String,
     pub count: u32,
     pub values: Vec<f32>,
 }
 
-impl MocObject for PivotManager {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
-    where
-        Self: Sized,
-    {
-        let o: ObjectData = reader.read()?;
-        Ok(Self { items: o.as_pivots() })
-    }
-}
-
-impl MocObject for Vec<Pivot> {
+impl MocObject for Vec<Texture> {
     unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
         let count = reader.read_var()?;
         let mut pivots = Vec::with_capacity(count as usize);
+        debug!("Find pivots: {}", count);
         for _ in 0..count {
             pivots.push(reader.read()?);
         }
@@ -41,13 +28,14 @@ impl MocObject for Vec<Pivot> {
     }
 }
 
-impl MocObject for Pivot {
+impl MocObject for Texture {
     unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
         let id = reader.read()?;
         let count: i32 = reader.read()?;
+        warn!("Texture count: {}={}", id, count);
         let values: ObjectData = reader.read()?;
         Ok(Self {
             id,
@@ -59,14 +47,14 @@ impl MocObject for Pivot {
 }
 
 impl ObjectData {
-    pub fn as_pivots(self) -> Vec<Pivot> {
+    pub fn as_texture(self) -> Vec<Texture> {
         match self {
             ObjectData::Null => Vec::new(),
-            ObjectData::ObjectArray(o) => o.into_iter().map(|x| x.as_pivots()).flatten().collect(),
-            ObjectData::Pivot(v) => vec![v],
-            ObjectData::PivotManager(v) => v.items,
+            ObjectData::ObjectArray(o) => o.into_iter().map(|x| x.as_texture()).flatten().collect(),
+            // ObjectData::Pivot(v) => vec![v],
+            // ObjectData::PivotManager(v) => v.items,
             s => {
-                warn!("ObjectData::as_pivots() called on non-pivot object {s:?}");
+                warn!("ObjectData::as_texture() called on non-pivot object {s:?}");
                 vec![]
             }
         }

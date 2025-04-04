@@ -4,6 +4,7 @@ mod objects;
 mod params;
 mod parts;
 mod pivots;
+mod textures;
 
 use self::parts::Part;
 use crate::{
