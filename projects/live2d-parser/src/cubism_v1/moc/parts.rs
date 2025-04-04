@@ -54,8 +54,12 @@ impl MocObject for Part {
 }
 
 impl ObjectData {
-    pub fn as_parts(&self) -> Vec<Part> {
+    pub fn as_parts(self) -> Vec<Part> {
         match self {
+            ObjectData::Part(v) => { vec![*v]}, 
+            ObjectData::ObjectArray(v) => {
+                v.into_iter().map(|o|o.as_parts()).flatten().collect()
+            }
             s => {
                 warn!("ObjectData::as_parts() called on non-pivot object {s:?}");
                 vec![]
