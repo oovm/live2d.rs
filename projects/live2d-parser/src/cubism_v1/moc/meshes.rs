@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use tracing::{debug, info, trace, warn};
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Texture {
+pub struct Mesh {
     pub id: String,
     pub target_id: String,
     pub average_draw_order: i32,
@@ -15,7 +15,7 @@ pub struct Texture {
     pub clip_id: Vec<String>,
 }
 
-impl MocObject for Vec<Texture> {
+impl MocObject for Vec<Mesh> {
     unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
@@ -30,7 +30,7 @@ impl MocObject for Vec<Texture> {
     }
 }
 
-impl MocObject for Texture {
+impl MocObject for Mesh {
     unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
@@ -75,7 +75,7 @@ impl MocObject for Texture {
 }
 
 impl ObjectData {
-    pub fn as_texture(self) -> Vec<Texture> {
+    pub fn as_texture(self) -> Vec<Mesh> {
         match self {
             ObjectData::Null => Vec::new(),
             ObjectData::ObjectArray(o) => o.into_iter().map(|x| x.as_texture()).flatten().collect(),

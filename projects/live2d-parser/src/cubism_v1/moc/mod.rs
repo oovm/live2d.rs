@@ -4,7 +4,7 @@ mod objects;
 mod params;
 mod parts;
 mod pivots;
-mod textures;
+mod meshes;
 mod string_id;
 
 use self::parts::Part;
@@ -22,7 +22,7 @@ use integer_encoding::VarInt;
 use serde::{Deserialize, Serialize};
 use std::{cell::RefCell, ops::AddAssign, slice::SliceIndex};
 use tracing::debug;
-use crate::cubism_v1::moc::textures::Texture;
+use crate::cubism_v1::moc::meshes::Mesh;
 
 #[derive(Serialize, Deserialize)]
 pub struct Moc {
@@ -49,7 +49,7 @@ pub enum ObjectData {
     CurvedSurfaceDeformer(CurvedSurfaceDeformer),
     PivotManager(PivotManager),
     Pivot(Pivot),
-    Texture(Texture),
+    Texture(Mesh),
     Affine(Affine),
     F32Array(Vec<f32>),
     ObjectArray(Vec<ObjectData>),
