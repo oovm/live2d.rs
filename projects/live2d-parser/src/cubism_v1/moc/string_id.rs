@@ -24,7 +24,7 @@ impl MocObject for String {
         };
         let length = r.read_var()? as usize;
         // tracing::trace!("String Length: {length}");
-        let str = String::from_utf8(r.view(..length).to_vec()).unwrap();
+        let str = String::from_utf8(r.rest().get(..length).unwrap().to_vec())?;
         // warn!("String: {str}\n    {caller:?}");
         r.advance(length);
         Ok(str)

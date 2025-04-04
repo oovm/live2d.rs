@@ -116,9 +116,6 @@ impl<'i> MocReader<'i> {
         let offset = self.ptr.borrow();
         self.moc.get(*offset..).unwrap()
     }
-    pub fn view(&self, slice: impl SliceIndex<[u8], Output = [u8]>) -> &[u8] {
-        self.rest().get_unchecked(slice)
-    }
     pub fn advance(&self, n: usize) {
         self.ptr.borrow_mut().add_assign(n)
     }
