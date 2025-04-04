@@ -68,10 +68,15 @@ impl Moc {
         }
         let version = reader.read()?;
         let parameters = reader.read()?;
-        let parts: ObjectData = reader.read()?;
+        // let parts: ObjectData = reader.read()?;
         let canvas_width = reader.read()?;
         let canvas_height = reader.read()?;
-        Ok(Self { version, parameters, parts: parts.as_parts(), canvas_width, canvas_height })
+        Ok(Self { version, 
+            // 
+            parameters, 
+            //
+            parts: vec![],
+            canvas_width, canvas_height })
     }
 }
 

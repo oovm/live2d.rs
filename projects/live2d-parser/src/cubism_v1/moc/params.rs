@@ -12,10 +12,11 @@ pub struct ParameterList {
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Parameter {
-    pub _align: [u8; 2],
     /// Parameter name
     pub id: String,
+    /// Minimum value
     pub min_value: f32,
+    /// Maximum value
     pub max_value: f32,
     /// Default value
     pub default_value: f32,
@@ -41,12 +42,12 @@ impl MocObject for Parameter {
     where
         Self: Sized,
     {
-        let align = r.read()?;
+        let align = r.read_var()?;
         let max_value = r.read()?;
         let min_value = r.read()?;
         let default_value = r.read()?;
         let name = r.read()?;
-        Ok(Parameter { _align: align, id: name, min_value, max_value, default_value })
+        Ok(Parameter { id: name, min_value, max_value, default_value })
     }
 }
 

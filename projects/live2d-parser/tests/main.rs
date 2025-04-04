@@ -51,6 +51,9 @@ fn test_moc() -> Result<(), L2Error> {
     };
     // println!("MagicHead: {}", m.magic_head());
     // println!("Elements: {:#?}", m.element_count());
+    for p in m.parameters.as_slice() {
+         println!("Parameter: {:#?}", p);
+    }
     for p in m.parts.as_slice() {
         println!("Part: {:#?}", p);
     }
