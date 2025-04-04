@@ -7,7 +7,7 @@ pub enum DeformerType {
     CurvedSurface = 2,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct RotationDeformer {
     pub id: String,
     pub target_id: String,
@@ -15,7 +15,7 @@ pub struct RotationDeformer {
     pub pivots_opacity: Vec<f32>,
     pub affine: Vec<Affine>,
 }
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct CurvedSurfaceDeformer {
     pub id: String,
     pub target_id: String,

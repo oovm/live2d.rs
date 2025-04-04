@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use crate::{
     cubism_v1::moc::{MocObject, MocReader},
     L2Error,
@@ -9,7 +10,7 @@ pub struct ParameterList {
     items: Vec<u32>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Parameter {
     pub _align: [u8; 2],
     /// Parameter name

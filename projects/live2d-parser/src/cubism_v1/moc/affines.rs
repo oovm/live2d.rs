@@ -1,10 +1,11 @@
+use serde::{Deserialize, Serialize};
 use crate::{
     cubism_v1::moc::{parts::Part, MocObject, MocReader, ObjectData},
     L2Error,
 };
 use tracing::{trace, warn};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Affine {
     pub origin_x: f32,
     pub origin_y: f32,

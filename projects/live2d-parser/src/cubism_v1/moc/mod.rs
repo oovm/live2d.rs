@@ -35,7 +35,7 @@ pub struct Moc {
     pub canvas_height: i32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub enum ObjectData {
     Null,
     F32Array(Vec<f32>),

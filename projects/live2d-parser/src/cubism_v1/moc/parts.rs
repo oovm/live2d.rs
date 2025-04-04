@@ -1,7 +1,7 @@
 use super::*;
 use tracing::warn;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Part {
     /// Part name
     pub id: String,

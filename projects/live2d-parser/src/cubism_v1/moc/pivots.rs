@@ -1,15 +1,16 @@
+use serde::{Deserialize, Serialize};
 use crate::{
     cubism_v1::moc::{MocObject, MocReader, ObjectData},
     L2Error,
 };
 use tracing::{debug, info, trace, warn};
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct PivotManager {
     pub items: Vec<Pivot>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Pivot {
     pub id: String,
     pub count: u32,
