@@ -18,3 +18,11 @@ json.write_all(serde_json::to_string_pretty(&moc)?.as_bytes())?;
 ```
 
 - Analyze Cubism 3.0 model
+
+```rust
+use live2d_parser::cubism_v3::Moc3;
+
+let moc = unsafe { Moc3::new(include_bytes!("mao_pro.moc3"))? };
+let mut json = File::create("mao_pro.json")?;
+json.write_all(serde_json::to_string_pretty(&moc)?.as_bytes())?;
+```
