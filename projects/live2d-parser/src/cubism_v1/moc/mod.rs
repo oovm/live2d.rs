@@ -55,6 +55,7 @@ pub enum ObjectData {
     I32Array(Vec<i32>),
     F32Array(Vec<f32>),
     ObjectArray(Vec<ObjectData>),
+    ObjectReference(i32),
     Unknown60,
     Unknown134,
     Unknown { type_id: u64 },
@@ -157,20 +158,3 @@ impl<'i> MocReader<'i> {
     }
 }
 
-impl MocObject for MocVersion {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
-    where
-        Self: Sized,
-    {
-        let v = match reader.moc.get_unchecked(3) {
-            6 => MocVersion::V2_6_INTIAL,
-            7 => MocVersion::V2_7_OPACITY,
-            8 => MocVersion::V2_8_TEX_OPTION,
-            9 => MocVersion::V2_9_AVATAR_PARTS,
-            10 => MocVersion::V2_10_SDK2,
-            11 => MocVersion::V2_11_SDK2_1,
-            _ => Err(L2Error::UnknownError {})?,
-        };
-        Ok(v)
-    }
-}

@@ -1,5 +1,6 @@
 use super::*;
-use tracing::{trace, warn};
+use tracing::{error, trace, warn};
+use crate::cubism_v1::moc::ObjectData::ObjectReference;
 
 impl MocObject for Vec<ObjectData> {
     #[track_caller]
@@ -31,6 +32,11 @@ impl MocObject for ObjectData {
             15 => ObjectData::ObjectArray(r.read()?),
             25 => ObjectData::I32Array(r.read()?),
             27 => ObjectData::F32Array(r.read()?),
+            33 => {
+                let object_id: i32 = r.read()?;
+                error!("ObjectData::read_object() called on non-pivot object {object_id}");
+                return Ok(ObjectReference(object_id))
+            },
             65 => ObjectData::CurvedSurfaceDeformer(r.read()?),
             66 => ObjectData::PivotManager(r.read()?),
             67 => ObjectData::Pivot(r.read()?),
@@ -136,5 +142,22 @@ impl ObjectData {
                 vec![]
             }
         }
+    }
+}
+impl MocObject for MocVersion {
+    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    where
+        Self: Sized,
+    {
+        let v = match reader.moc.get_unchecked(3) {
+            6 => MocVersion::V2_6_INTIAL,
+            7 => MocVersion::V2_7_OPACITY,
+            8 => MocVersion::V2_8_TEX_OPTION,
+            9 => MocVersion::V2_9_AVATAR_PARTS,
+            10 => MocVersion::V2_10_SDK2,
+            11 => MocVersion::V2_11_SDK2_1,
+            _ => Err(L2Error::UnknownError {})?,
+        };
+        Ok(v)
     }
 }
