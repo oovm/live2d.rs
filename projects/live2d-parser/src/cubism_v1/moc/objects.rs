@@ -26,7 +26,7 @@ impl MocObject for ObjectData {
     {
         let caller = std::panic::Location::caller();
         let type_id = r.read_var()?;
-        trace!("preview: {type_id}@{:?}\n    {:?}", r.view(..8), caller);
+        // trace!("preview: {type_id}@{:?}\n    {:?}", r.view(..8), caller);
         let data = match type_id {
             0 => ObjectData::Null,
             15 => ObjectData::ObjectArray(r.read()?),
@@ -150,12 +150,12 @@ impl MocObject for MocVersion {
         Self: Sized,
     {
         let v = match reader.moc.get_unchecked(3) {
-            6 => MocVersion::V2_6_INTIAL,
-            7 => MocVersion::V2_7_OPACITY,
-            8 => MocVersion::V2_8_TEX_OPTION,
-            9 => MocVersion::V2_9_AVATAR_PARTS,
-            10 => MocVersion::V2_10_SDK2,
-            11 => MocVersion::V2_11_SDK2_1,
+            6 => MocVersion::V1_6_INTIAL,
+            7 => MocVersion::V1_7_OPACITY,
+            8 => MocVersion::V1_8_TEX_OPTION,
+            9 => MocVersion::V1_9_AVATAR_PARTS,
+            10 => MocVersion::V1_10_SDK2_0,
+            11 => MocVersion::V1_11_SDK2_1,
             _ => Err(L2Error::UnknownError {})?,
         };
         Ok(v)

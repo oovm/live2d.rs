@@ -1,3 +1,4 @@
+use tracing::error;
 use super::*;
 
 
@@ -11,6 +12,11 @@ impl MocObject for String {
         // #[cfg(test)]
         let _ = match r.read_var()? {
             0 => return Ok(String::new()),
+            33 => {
+                let object_id: i32 = r.read()?;
+                error!("unknown string type: {object_id}");
+                return Ok(String::new());
+            }
             50 => ObjectData::DrawDataName,
             51 => ObjectData::BaseDataName,
             60 => ObjectData::Unknown60,

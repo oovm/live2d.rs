@@ -1,6 +1,6 @@
 [package]
 name = "live2d-parser"
-version = "0.0.3"
+version = "0.1.0"
 authors = ["Aster <192607617@qq.com>"]
 description = "The pure rust parser for Live2D's `*.model.json` and `*.moc`"
 repository = "https://github.com/oovm/live2d-unpacker"

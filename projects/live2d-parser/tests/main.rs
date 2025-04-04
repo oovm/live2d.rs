@@ -1,7 +1,6 @@
-use live2d_parser::{cubism_v3::moc3::Moc3, L2Error, Live2DModel, Model3Json};
-use std::path::Path;
+use live2d_parser::{cubism_v1::moc::Moc, cubism_v3::moc3::Moc3, L2Error, Live2DModel, Model3Json};
+use std::{fs::File, io::Write, path::Path};
 use tracing::Level;
-use live2d_parser::cubism_v1::moc::Moc;
 
 #[test]
 fn test_load_model_v3() -> Result<(), serde_json::Error> {
@@ -42,30 +41,19 @@ fn test_load_model_v3() -> Result<(), serde_json::Error> {
     Ok(())
 }
 
-
 #[test]
 fn test_moc() -> Result<(), L2Error> {
     tracing_subscriber::fmt().pretty().with_max_level(Level::TRACE).init();
-    let m = unsafe {
-        Moc::new(include_bytes!("s1.moc"))?
-    };
-    // println!("MagicHead: {}", m.magic_head());
-    // println!("Elements: {:#?}", m.element_count());
-    for p in m.parameters.as_slice() {
-         println!("Parameter: {:#?}", p);
-    }
-    for p in m.parts.as_slice() {
-        println!("Part: {:#?}", p);
-    }
+    let moc = unsafe { Moc::new(include_bytes!("BCY.moc"))? };
+    let mut json = File::create("BCY.json").unwrap();
+    json.write_all(serde_json::to_string_pretty(&moc).unwrap().as_bytes()).unwrap();
     Ok(())
 }
 
 #[test]
 fn test_moc3() -> Result<(), serde_json::Error> {
     tracing_subscriber::fmt().pretty().init();
-    let m = unsafe {
-        Moc3::new(include_bytes!("mao_pro.moc3").to_vec())?
-    };
+    let m = unsafe { Moc3::new(include_bytes!("mao_pro.moc3").to_vec())? };
     // println!("MagicHead: {}", m.magic_head());
     // println!("Elements: {:#?}", m.element_count());
     for p in m.parts().take(4) {

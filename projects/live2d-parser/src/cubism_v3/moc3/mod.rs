@@ -59,11 +59,11 @@ impl Moc3 {
         // 0x00000005
         unsafe {
             match self.m.get_unchecked(4) {
-                1 => MocVersion::V30,
-                2 => MocVersion::V33,
-                3 => MocVersion::V40,
-                4 => MocVersion::V42,
-                5 => MocVersion::V50,
+                1 => MocVersion::V3_1_SDK3_0,
+                2 => MocVersion::V3_2_SDK3_3,
+                3 => MocVersion::V3_3_SDK4_0,
+                4 => MocVersion::V3_4_SDK4_2,
+                5 => MocVersion::V3_5_SDK5_0,
                 _ => panic!("Unknown Moc3 version"),
             }
         }
