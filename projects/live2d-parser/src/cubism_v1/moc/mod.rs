@@ -38,8 +38,9 @@ pub struct Moc {
     pub canvas_height: i32,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Default)]
 pub enum ObjectData {
+    #[default]
     Null,
     DrawDataName,
     BaseDataName,
@@ -49,8 +50,9 @@ pub enum ObjectData {
     CurvedSurfaceDeformer(CurvedSurfaceDeformer),
     PivotManager(PivotManager),
     Pivot(Pivot),
-    Texture(Mesh),
+    Texture(Box<Mesh>),
     Affine(Affine),
+    I32Array(Vec<i32>),
     F32Array(Vec<f32>),
     ObjectArray(Vec<ObjectData>),
     Unknown60,
