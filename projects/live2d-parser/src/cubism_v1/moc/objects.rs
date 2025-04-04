@@ -95,6 +95,7 @@ impl MocObject for Vec<f32> {
         Self: Sized,
     {
         let count = reader.read_var()?;
+        println!( "Find floats: {}", count);
         let mut values = Vec::with_capacity(count as usize);
         for _ in 0..count {
             values.push(reader.read()?);

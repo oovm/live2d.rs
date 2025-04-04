@@ -23,7 +23,7 @@ impl MocObject for PivotManager {
         Self: Sized,
     {
         let o: ObjectData = reader.read()?;
-
+        warn!("PivotManager count");
         Ok(Self { items: o.as_pivots() })
     }
 }

@@ -12,7 +12,7 @@ pub struct ParameterList {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct Parameter {
+pub struct ParameterDefinition {
     /// Parameter name
     pub id: String,
     /// Minimum value
@@ -23,8 +23,8 @@ pub struct Parameter {
     pub default_value: f32,
 }
 
-impl MocObject for Vec<Parameter> {
-    unsafe fn read_object(r: &MocReader) -> Result<Vec<Parameter>, L2Error>
+impl MocObject for Vec<ParameterDefinition> {
+    unsafe fn read_object(r: &MocReader) -> Result<Vec<ParameterDefinition>, L2Error>
     where
         Self: Sized,
     {
@@ -38,8 +38,8 @@ impl MocObject for Vec<Parameter> {
     }
 }
 
-impl MocObject for Parameter {
-    unsafe fn read_object(r: &MocReader) -> Result<Parameter, L2Error>
+impl MocObject for ParameterDefinition {
+    unsafe fn read_object(r: &MocReader) -> Result<ParameterDefinition, L2Error>
     where
         Self: Sized,
     {
@@ -49,7 +49,7 @@ impl MocObject for Parameter {
         let min_value = r.read()?;
         let default_value = r.read()?;
         let name = r.read()?;
-        Ok(Parameter { id: name, min_value, max_value, default_value })
+        Ok(ParameterDefinition { id: name, min_value, max_value, default_value })
     }
 }
 

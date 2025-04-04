@@ -10,7 +10,7 @@ use crate::{
     cubism_v1::moc::{
         affines::Affine,
         deformers::{CurvedSurfaceDeformer, RotationDeformer},
-        params::Parameter,
+        params::ParameterDefinition,
         pivots::{Pivot, PivotManager},
     },
     helpers::MocVersion,
@@ -26,7 +26,7 @@ pub struct Moc {
     /// The version of the moc file
     pub version: MocVersion,
     /// Parameter list
-    pub parameters: Vec<Parameter>,
+    pub parameters: Vec<ParameterDefinition>,
     /// Parts list
     pub parts: Vec<Part>,
     /// Canvas width
@@ -68,14 +68,14 @@ impl Moc {
         }
         let version = reader.read()?;
         let parameters = reader.read()?;
-        // let parts: ObjectData = reader.read()?;
+        let parts: ObjectData = reader.read()?;
         let canvas_width = reader.read()?;
         let canvas_height = reader.read()?;
         Ok(Self { version, 
             // 
             parameters, 
             //
-            parts: vec![],
+            parts: parts.as_parts(),
             canvas_width, canvas_height })
     }
 }
