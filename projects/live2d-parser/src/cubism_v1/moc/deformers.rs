@@ -63,9 +63,13 @@ impl MocObject for CurvedSurfaceDeformer {
         let pivots: ObjectData = reader.read()?;
         println!("v: {}", reader.version() );
         
-        let opacities = if reader.version() >= 10 { let o: ObjectData = reader.read()?; 
+        let opacities = if reader.version() >= 10 {
+            let o: ObjectData = reader.read()?; 
             warn!("opacities: {:?}", o);
             vec![] } else { Vec::new() };
+        let o: Vec<f32> = reader.read()?;
+        println!("unknown: {o:?}");
+        
         Ok(Self {
             id,
             target_id,
