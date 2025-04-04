@@ -11,6 +11,7 @@ pub struct Texture {
     pub target_id: String,
     // pub count: u32,
     pub values: Vec<f32>,
+    pub clip_id: Vec<String>,
 }
 
 impl MocObject for Vec<Texture> {
@@ -44,18 +45,30 @@ impl MocObject for Texture {
         println!("Texture _2: {:?}", _array1);
         let _array2: Vec<f32> = reader.read()?;
         println!("Texture _3: {:?}", _array2);
-
-        let draw_id: String = reader.read()?;
-        println!("Texture draw_id: {:?}", draw_id);
-        if draw_id.is_empty() {
+        let clip_id = if reader.version() >= 11 {
+            let draw_id: String = reader.read()?;
+            println!("Texture draw_id: {:?}", draw_id);
+            if draw_id.is_empty() {
+                vec![]
+            }
+            else if draw_id.contains(",") {
+                let clip_ids: Vec<String> = draw_id.split(',').map(|s| s.to_string()).collect();
+                println!("Texture clip_ids: {:?}", clip_ids);
+                clip_ids
+            }
+            else {
+                vec![draw_id]
+            }
         }
         else {
-        }
+            vec![]
+        };
         Ok(Self {
             id,
             target_id,
             // count: target as u32,
             values: vec![],
+            clip_id,
         })
     }
 }
