@@ -1,5 +1,5 @@
 [package]
-name = "lpk"
+name = "live2d-runtime"
 version = { workspace = true }
 authors = ["Aster <192607617@qq.com>"]
 description = "Decrypt the `.lkp` file from `Live2dViewerEx`"
@@ -7,7 +7,7 @@ repository = "https://github.com/oovm/sub_projects"
 documentation = "https://docs.rs/sub_projects"
 readme = "readme.md"
 license = "AGPL-3"
-edition = "2021"
+edition = "2024"
 
 [dependencies]
 md5 = "0.7"

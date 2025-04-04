@@ -52,8 +52,8 @@ impl MocObject for String {
         let caller = std::panic::Location::caller();
         // #[cfg(test)]
         let _ = match r.read_var()? {
-            50 => ObjectData::Unknown50,
-            51 => ObjectData::Unknown51,
+            50 => ObjectData::DrawDataName,
+            51 => ObjectData::BaseDataName,
             60 => ObjectData::Unknown60,
             134 => ObjectData::Unknown134,
             s => panic!("unknown string type: {s}\n    {caller:?}"),

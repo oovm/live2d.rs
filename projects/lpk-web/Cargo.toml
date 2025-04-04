@@ -20,7 +20,7 @@ dioxus = { version = "0.6.3", features = ["desktop"] }
 rfd = "0.15.3"
 
 [dependencies.lpk]
-path = "../lpk-core"
+path = "../live2d-runtime"
 version = "0.0.*"
 
 [dev-dependencies]

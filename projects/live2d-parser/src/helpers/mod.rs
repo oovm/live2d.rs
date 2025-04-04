@@ -1,5 +1,8 @@
+use serde::{Deserialize, Serialize};
+
 #[allow(non_camel_case_types)]
 #[derive(Eq, PartialEq, Ord, PartialOrd)]
+#[derive(Serialize, Deserialize)]
 pub enum MocVersion {
     /// `moc 0x6`, initial version,
     V2_6_INTIAL,

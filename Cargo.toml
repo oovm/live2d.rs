@@ -2,10 +2,12 @@
 resolver = "3"
 members = ["projects/*"]
 default-members = [
-    "projects/lpk-core",
-    "projects/lpk-gui",
+    "projects/live2d-parser",
+    "projects/live2d-runtime",
 ]
 exclude = [
+    "projects/lpk-gui",
+    "projects/lpk-web",
     "projects/.DS_Store",
 ]
 

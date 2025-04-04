@@ -18,8 +18,10 @@ use crate::{
 };
 use integer_encoding::VarInt;
 use std::{cell::RefCell, ops::AddAssign, slice::SliceIndex};
+use serde::{Deserialize, Serialize};
 use tracing::debug;
 
+#[derive(Serialize, Deserialize)]
 pub struct Moc {
     /// The version of the moc file
     pub version: MocVersion,
@@ -44,8 +46,8 @@ pub enum ObjectData {
     Pivot(Pivot),
     PivotManager(PivotManager),
     Affine(Affine),
-    Unknown50,
-    Unknown51,
+    DrawDataName,
+    BaseDataName,
     Unknown60,
     Unknown134,
     Unknown { type_id: u64 },
