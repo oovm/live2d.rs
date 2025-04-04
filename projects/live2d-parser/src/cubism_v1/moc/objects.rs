@@ -35,6 +35,8 @@ impl MocObject for ObjectData {
             67 => ObjectData::Pivot(r.read()?),
             68 => ObjectData::RotationDeformer(r.read()?),
             69 => ObjectData::Affine(r.read()?),
+         
+            131 => ObjectData::Parameter(r.read()?),
             133 => ObjectData::Part(Box::new(r.read()?)),
             // _ => Err(L2Error::UnknownType { type_id: type_id as u32 })?,
             _ => panic!("unknown type: {type_id}"),

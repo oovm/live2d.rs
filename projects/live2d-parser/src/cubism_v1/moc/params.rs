@@ -1,10 +1,9 @@
-use serde::{Deserialize, Serialize};
 use crate::{
-    cubism_v1::moc::{MocObject, MocReader},
+    cubism_v1::moc::{parts::Part, MocObject, MocReader, ObjectData},
     L2Error,
 };
-use tracing::debug;
-use crate::cubism_v1::moc::ObjectData;
+use serde::{Deserialize, Serialize};
+use tracing::{debug, warn};
 
 #[derive(Debug)]
 pub struct ParameterList {
@@ -23,28 +22,11 @@ pub struct ParameterDefinition {
     pub default_value: f32,
 }
 
-impl MocObject for Vec<ParameterDefinition> {
-    unsafe fn read_object(r: &MocReader) -> Result<Vec<ParameterDefinition>, L2Error>
-    where
-        Self: Sized,
-    {
-        let count = r.read_var()?;
-        let mut params = Vec::with_capacity(count as usize);
-        debug!("Find parameters: {}", count);
-        for _ in 0..count {
-            params.push(r.read()?)
-        }
-        Ok(params)
-    }
-}
-
 impl MocObject for ParameterDefinition {
     unsafe fn read_object(r: &MocReader) -> Result<ParameterDefinition, L2Error>
     where
         Self: Sized,
     {
-        let align: i32 = r.read_var()?;
-        assert_eq!(align, 131, "unknown object");
         let max_value = r.read()?;
         let min_value = r.read()?;
         let default_value = r.read()?;
@@ -53,3 +35,15 @@ impl MocObject for ParameterDefinition {
     }
 }
 
+impl ObjectData {
+    pub fn as_parameters(self) -> Vec<ParameterDefinition> {
+        match self {
+            ObjectData::Parameter(p) => vec![p],
+            ObjectData::ObjectArray(v) => v.into_iter().map(|o| o.as_parameters()).flatten().collect(),
+            s => {
+                warn!("ObjectData::as_parameters() called on non-pivot object {s:?}");
+                vec![]
+            }
+        }
+    }
+}

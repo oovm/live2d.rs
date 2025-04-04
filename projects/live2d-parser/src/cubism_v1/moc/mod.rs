@@ -63,20 +63,20 @@ impl Moc {
     pub unsafe fn new(data: &[u8]) -> Result<Moc, L2Error> {
         let reader = MocReader { moc: data, ptr: RefCell::new(0) };
         if reader.moc.get_unchecked(..3) == b"moc" {
-            reader.advance(9);
+            reader.advance(8);
         }
         else {
             return Err(L2Error::UnknownError {});
         }
         let version = reader.read()?;
-        let parameters: Vec<ObjectData> = reader.read()?;
+        let parameters: ObjectData = reader.read()?;
         let parts: ObjectData = reader.read()?;
         let canvas_width = reader.read()?;
         let canvas_height = reader.read()?;
         Ok(Self {
             version,
             //
-            parameters: vec![],
+            parameters: parameters.as_parameters(),
             //
             parts: parts.as_parts(),
             canvas_width,
