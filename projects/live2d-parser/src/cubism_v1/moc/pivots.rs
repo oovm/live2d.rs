@@ -1,8 +1,8 @@
-use serde::{Deserialize, Serialize};
 use crate::{
     cubism_v1::moc::{MocObject, MocReader, ObjectData},
     L2Error,
 };
+use serde::{Deserialize, Serialize};
 use tracing::{debug, info, trace, warn};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -18,7 +18,7 @@ pub struct Pivot {
 }
 
 impl MocObject for PivotManager {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -28,7 +28,7 @@ impl MocObject for PivotManager {
 }
 
 impl MocObject for Vec<Pivot> {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -42,7 +42,7 @@ impl MocObject for Vec<Pivot> {
 }
 
 impl MocObject for Pivot {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {

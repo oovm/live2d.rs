@@ -1,10 +1,9 @@
-use tracing::error;
 use super::*;
+use tracing::error;
 
 
 impl MocObject for String {
-    #[track_caller]
-    unsafe fn read_object(r: &MocReader) -> Result<Self, L2Error>
+    fn read_object(r: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -25,9 +24,9 @@ impl MocObject for String {
         };
         let length = r.read_var()? as usize;
         // tracing::trace!("String Length: {length}");
-        let str = String::from_utf8_lossy(r.view(..length));
+        let str = String::from_utf8(r.view(..length).to_vec()).unwrap();
         // warn!("String: {str}\n    {caller:?}");
         r.advance(length);
-        Ok(str.to_string())
+        Ok(str)
     }
 }

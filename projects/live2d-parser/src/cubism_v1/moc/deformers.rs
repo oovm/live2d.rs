@@ -27,7 +27,7 @@ pub struct CurvedSurfaceDeformer {
 }
 
 impl MocObject for RotationDeformer {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -51,7 +51,7 @@ impl MocObject for RotationDeformer {
 }
 
 impl MocObject for CurvedSurfaceDeformer {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {

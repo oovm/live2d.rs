@@ -1,8 +1,8 @@
-use serde::{Deserialize, Serialize};
 use crate::{
     cubism_v1::moc::{parts::Part, MocObject, MocReader, ObjectData},
     L2Error,
 };
+use serde::{Deserialize, Serialize};
 use tracing::{trace, warn};
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -17,7 +17,7 @@ pub struct Affine {
 }
 
 impl MocObject for Vec<Affine> {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -32,7 +32,7 @@ impl MocObject for Vec<Affine> {
 }
 
 impl MocObject for Affine {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {

@@ -27,7 +27,7 @@ pub struct Mesh {
 }
 
 impl MocObject for Vec<Mesh> {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -42,7 +42,7 @@ impl MocObject for Vec<Mesh> {
 }
 
 impl MocObject for Mesh {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -55,12 +55,9 @@ impl MocObject for Mesh {
         output.pivot_opacity = reader.read()?;
         if reader.version() >= 11 {
             let draw_id: String = reader.read()?;
-            if draw_id.is_empty() {
-            }
-            else if draw_id.contains(",") {
+            if draw_id.is_empty() {} else if draw_id.contains(",") {
                 output.clip_id = draw_id.split(',').map(|s| s.to_string()).collect();
-            }
-            else {
+            } else {
                 output.clip_id.push(draw_id)
             }
         }

@@ -20,7 +20,7 @@ pub enum PartType {
 }
 
 impl MocObject for Vec<Part> {
-    unsafe fn read_object(r: &MocReader) -> Result<Self, L2Error>
+    fn read_object(r: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -37,7 +37,7 @@ impl MocObject for Vec<Part> {
 }
 
 impl MocObject for Part {
-    unsafe fn read_object(r: &MocReader) -> Result<Self, L2Error>
+    fn read_object(r: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -56,9 +56,9 @@ impl MocObject for Part {
 impl ObjectData {
     pub fn as_parts(self) -> Vec<Part> {
         match self {
-            ObjectData::Part(v) => { vec![*v]}, 
+            ObjectData::Part(v) => { vec![*v] }
             ObjectData::ObjectArray(v) => {
-                v.into_iter().map(|o|o.as_parts()).flatten().collect()
+                v.into_iter().map(|o| o.as_parts()).flatten().collect()
             }
             s => {
                 warn!("ObjectData::as_parts() called on non-pivot object {s:?}");

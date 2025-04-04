@@ -23,7 +23,7 @@ pub struct ParameterDefinition {
 }
 
 impl MocObject for ParameterDefinition {
-    unsafe fn read_object(r: &MocReader) -> Result<ParameterDefinition, L2Error>
+    fn read_object(r: &MocReader) -> Result<ParameterDefinition, L2Error>
     where
         Self: Sized,
     {

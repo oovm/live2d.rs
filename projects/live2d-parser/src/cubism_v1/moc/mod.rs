@@ -1,10 +1,10 @@
 mod affines;
 mod deformers;
+mod meshes;
 mod objects;
 mod params;
 mod parts;
 mod pivots;
-mod meshes;
 mod string_id;
 
 use self::parts::Part;
@@ -12,6 +12,7 @@ use crate::{
     cubism_v1::moc::{
         affines::Affine,
         deformers::{CurvedSurfaceDeformer, RotationDeformer},
+        meshes::Mesh,
         params::ParameterDefinition,
         pivots::{Pivot, PivotManager},
     },
@@ -22,7 +23,6 @@ use integer_encoding::VarInt;
 use serde::{Deserialize, Serialize};
 use std::{cell::RefCell, ops::AddAssign, slice::SliceIndex};
 use tracing::debug;
-use crate::cubism_v1::moc::meshes::Mesh;
 
 #[derive(Serialize, Deserialize)]
 pub struct Moc {
@@ -58,9 +58,10 @@ pub enum ObjectData {
     ObjectReference(i32),
     Unknown60,
     Unknown134,
-    Unknown { type_id: u64 },
+    Unknown {
+        type_id: u64,
+    },
 }
-
 
 impl Moc {
     /// Parse moc data from a byte array
@@ -98,7 +99,7 @@ struct MocReader<'i> {
 }
 
 trait MocObject {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized;
 }
@@ -107,14 +108,15 @@ impl<'i> MocReader<'i> {
     pub unsafe fn new(moc: &'i [u8]) -> Self {
         Self { moc, ptr: RefCell::new(0) }
     }
-    pub unsafe fn version(&self) -> u8 {
-        *self.moc.get_unchecked(3)
+    pub fn version(&self) -> u8 {
+        // SAFETY: Checked that bytes always > 3
+        unsafe { *self.moc.get_unchecked(3) }
     }
-    pub unsafe fn rest(&self) -> &[u8] {
+    pub fn rest(&self) -> &[u8] {
         let offset = self.ptr.borrow();
-        self.moc.get_unchecked(*offset..)
+        self.moc.get(*offset..).unwrap()
     }
-    pub unsafe fn view(&self, slice: impl SliceIndex<[u8], Output = [u8]>) -> &[u8] {
+    pub fn view(&self, slice: impl SliceIndex<[u8], Output = [u8]>) -> &[u8] {
         self.rest().get_unchecked(slice)
     }
     pub fn advance(&self, n: usize) {
@@ -129,7 +131,7 @@ impl<'i> MocReader<'i> {
     //         None => Err(L2Error::UnknownError {}),
     //     }
     // }
-    pub unsafe fn read_var(&self) -> Result<i32, L2Error> {
+    pub fn read_var(&self) -> Result<i32, L2Error> {
         let b1: u8 = self.read()?;
         if (b1 & 0b10000000) == 0 {
             return Ok(b1 as i32);
@@ -152,9 +154,7 @@ impl<'i> MocReader<'i> {
 
         Ok(((b1 & 0b01111111) as i32) << 21 | ((b2 & 0b01111111) as i32) << 14 | ((b3 & 0b01111111) as i32) << 7 | (b4 as i32))
     }
-    #[track_caller]
-    pub unsafe fn read<T: MocObject>(&self) -> Result<T, L2Error> {
-        T::read_object(self)
+    pub fn read<T: MocObject>(&self) -> Result<T, L2Error> {
+        unsafe { T::read_object(self) }
     }
 }
-

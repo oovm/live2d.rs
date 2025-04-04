@@ -1,10 +1,10 @@
 use super::*;
-use tracing::{error, trace, warn};
 use crate::cubism_v1::moc::ObjectData::ObjectReference;
+use tracing::{error, trace, warn};
 
 impl MocObject for Vec<ObjectData> {
     #[track_caller]
-    unsafe fn read_object(r: &MocReader) -> Result<Self, L2Error>
+    fn read_object(r: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -20,7 +20,7 @@ impl MocObject for Vec<ObjectData> {
 
 impl MocObject for ObjectData {
     #[track_caller]
-    unsafe fn read_object(r: &MocReader) -> Result<Self, L2Error>
+    fn read_object(r: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -35,8 +35,8 @@ impl MocObject for ObjectData {
             33 => {
                 let object_id: i32 = r.read()?;
                 error!("ObjectData::read_object() called on non-pivot object {object_id}");
-                return Ok(ObjectReference(object_id))
-            },
+                return Ok(ObjectReference(object_id));
+            }
             65 => ObjectData::CurvedSurfaceDeformer(r.read()?),
             66 => ObjectData::PivotManager(r.read()?),
             67 => ObjectData::Pivot(r.read()?),
@@ -53,21 +53,23 @@ impl MocObject for ObjectData {
 }
 
 impl<const N: usize> MocObject for [u8; N] {
-    unsafe fn read_object(r: &MocReader) -> Result<Self, L2Error>
+    fn read_object(r: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
         if r.rest().len() < N {
             return Err(L2Error::OutOfBounds { rest: r.rest().len(), request: N });
         }
-        let array = std::ptr::read(r.rest().as_ptr() as *const [u8; N]);
+        let array = unsafe {
+            std::ptr::read(r.rest().as_ptr() as *const [u8; N])
+        };
         r.advance(N);
         Ok(array)
     }
 }
 
 impl MocObject for Vec<i32> {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -81,7 +83,7 @@ impl MocObject for Vec<i32> {
 }
 
 impl MocObject for i32 {
-    unsafe fn read_object(r: &MocReader) -> Result<Self, L2Error>
+    fn read_object(r: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -90,7 +92,7 @@ impl MocObject for i32 {
 }
 
 impl MocObject for Vec<f32> {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -104,7 +106,7 @@ impl MocObject for Vec<f32> {
 }
 
 impl MocObject for f32 {
-    unsafe fn read_object(r: &MocReader) -> Result<Self, L2Error>
+    fn read_object(r: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -113,17 +115,19 @@ impl MocObject for f32 {
 }
 
 impl MocObject for u8 {
-    unsafe fn read_object(r: &MocReader) -> Result<Self, L2Error>
+    fn read_object(r: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
-        let float = std::ptr::read(r.rest().as_ptr());
+        let float = unsafe {
+            std::ptr::read(r.rest().as_ptr())
+        };
         r.advance(1);
         Ok(float)
     }
 }
 impl MocObject for bool {
-    unsafe fn read_object(r: &MocReader) -> Result<Self, L2Error>
+    fn read_object(r: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
@@ -145,11 +149,11 @@ impl ObjectData {
     }
 }
 impl MocObject for MocVersion {
-    unsafe fn read_object(reader: &MocReader) -> Result<Self, L2Error>
+    fn read_object(reader: &MocReader) -> Result<Self, L2Error>
     where
         Self: Sized,
     {
-        let v = match reader.moc.get_unchecked(3) {
+        let v = match reader.version() {
             6 => MocVersion::V1_6_INTIAL,
             7 => MocVersion::V1_7_OPACITY,
             8 => MocVersion::V1_8_TEX_OPTION,
