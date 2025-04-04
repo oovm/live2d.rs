@@ -21,6 +21,7 @@ use integer_encoding::VarInt;
 use serde::{Deserialize, Serialize};
 use std::{cell::RefCell, ops::AddAssign, slice::SliceIndex};
 use tracing::debug;
+use crate::cubism_v1::moc::textures::Texture;
 
 #[derive(Serialize, Deserialize)]
 pub struct Moc {
@@ -47,6 +48,7 @@ pub enum ObjectData {
     CurvedSurfaceDeformer(CurvedSurfaceDeformer),
     PivotManager(PivotManager),
     Pivot(Pivot),
+    Texture(Texture),
     Affine(Affine),
     F32Array(Vec<f32>),
     ObjectArray(Vec<ObjectData>),
@@ -54,6 +56,7 @@ pub enum ObjectData {
     Unknown134,
     Unknown { type_id: u64 },
 }
+
 
 impl Moc {
     /// Parse moc data from a byte array
