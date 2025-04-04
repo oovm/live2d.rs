@@ -41,6 +41,10 @@ impl MocObject for Texture {
         println!("Texture Values: {:?}", values);
         let _align: i32 = reader.read()?;
         println!("Texture _1: {:?}", _align);
+        let _array1: Vec<f32> = reader.read()?;
+        println!("Texture _2: {:?}", _array1);
+        let _array2: Vec<f32> = reader.read()?;
+        println!("Texture _3: {:?}", _array2);
         Ok(Self {
             id,
             target_id,
