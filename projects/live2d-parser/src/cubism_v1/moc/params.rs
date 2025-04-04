@@ -4,6 +4,7 @@ use crate::{
     L2Error,
 };
 use tracing::debug;
+use crate::cubism_v1::moc::ObjectData;
 
 #[derive(Debug)]
 pub struct ParameterList {
@@ -42,7 +43,8 @@ impl MocObject for Parameter {
     where
         Self: Sized,
     {
-        let align = r.read_var()?;
+        let align: i32 = r.read_var()?;
+        assert_eq!(align, 131, "unknown object");
         let max_value = r.read()?;
         let min_value = r.read()?;
         let default_value = r.read()?;
