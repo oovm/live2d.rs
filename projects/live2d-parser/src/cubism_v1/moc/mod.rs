@@ -18,8 +18,8 @@ use crate::{
     L2Error,
 };
 use integer_encoding::VarInt;
-use std::{cell::RefCell, ops::AddAssign, slice::SliceIndex};
 use serde::{Deserialize, Serialize};
+use std::{cell::RefCell, ops::AddAssign, slice::SliceIndex};
 use tracing::debug;
 
 #[derive(Serialize, Deserialize)]
@@ -39,16 +39,17 @@ pub struct Moc {
 #[derive(Debug, Serialize, Deserialize)]
 pub enum ObjectData {
     Null,
-    F32Array(Vec<f32>),
-    ObjectArray(Vec<ObjectData>),
+    DrawDataName,
+    BaseDataName,
+    Parameter(ParameterDefinition),
     Part(Box<Part>),
     RotationDeformer(RotationDeformer),
     CurvedSurfaceDeformer(CurvedSurfaceDeformer),
-    Pivot(Pivot),
     PivotManager(PivotManager),
+    Pivot(Pivot),
     Affine(Affine),
-    DrawDataName,
-    BaseDataName,
+    F32Array(Vec<f32>),
+    ObjectArray(Vec<ObjectData>),
     Unknown60,
     Unknown134,
     Unknown { type_id: u64 },
@@ -68,16 +69,19 @@ impl Moc {
             return Err(L2Error::UnknownError {});
         }
         let version = reader.read()?;
-        let parameters = reader.read()?;
+        let parameters: Vec<ObjectData> = reader.read()?;
         let parts: ObjectData = reader.read()?;
         let canvas_width = reader.read()?;
         let canvas_height = reader.read()?;
-        Ok(Self { version, 
-            // 
-            parameters, 
+        Ok(Self {
+            version,
+            //
+            parameters: vec![],
             //
             parts: parts.as_parts(),
-            canvas_width, canvas_height })
+            canvas_width,
+            canvas_height,
+        })
     }
 }
 
