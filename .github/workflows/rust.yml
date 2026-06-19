@@ -19,7 +19,7 @@ jobs:
           - os: macos-latest
     steps:
       - run: git config --global core.autocrlf false
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v7
       - name: Rust Nightly
         uses: actions-rs/toolchain@v1
         with:
